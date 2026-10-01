@@ -1,6 +1,6 @@
 # 2Kdle
 
-A daily Wordle-style basketball game: guess the mystery **NBA 2K27** player in five tries.
+A daily Wordle-style basketball game: guess the mystery **NBA 2K27** player in 8 tries (5 in Hard mode).
 
 Every guess is compared against the mystery player:
 
@@ -18,7 +18,7 @@ Numbers and height that aren't exact show ▲ or ▼ to say whether the mystery 
 
 - **Daily** puzzle, the same player for everyone each day (seeded by your local date), drawn from 80+ OVR players
 - **Unlimited** mode with three pools: 85+, 80+ and 75+
-- **Hard mode**: search results show names only, with no rating, flag, position group or team
+- **Hard mode**: 5 guesses instead of 8, and search results show names only, with no rating, flag, position group or team. It can be switched before your first guess or after a game ends, not mid-game
 - Search by first or last name, with or without accents (`jokic` finds Nikola Jokić)
 - **Forfeit** to reveal the answer (counts as a loss), with an in-page confirm
 - Shareable emoji result grid, plus win %, streak and best streak saved in the browser

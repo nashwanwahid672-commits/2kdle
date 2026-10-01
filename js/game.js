@@ -2,7 +2,9 @@
 // [name, ovr, pos, team, conference, nation, continent, height (in), outside, inside, athleticism, playmaking, defense, rebounding]
 const P = RAW.map((r, i) => ({ i, name: r[0], ovr: r[1], pos: r[2], team: r[3], conf: r[4], nation: r[5], cont: r[6], ht: r[7],
   os: r[8], ins: r[9], ath: r[10], ply: r[11], def: r[12], reb: r[13] }));
-const MAX = 5;
+// Guess limit: 8 normally, 5 in Hard mode. It's fixed when a game starts, and
+// Hard mode can't be switched while a game is in progress.
+const LIMIT = { normal: 8, hard: 5 };
 const NUM = ["ovr", "ht", "os", "ins", "ath", "ply", "def", "reb"];
 const NEAR = { ovr: 3, ht: 2, os: 3, ins: 3, ath: 3, ply: 3, def: 3, reb: 3 };
 const STATS = ["os", "ins", "ath", "ply", "def", "reb"];
@@ -40,22 +42,27 @@ function hash(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0)
 function pool(min) { return P.filter(p => p.ovr >= min); }
 
 let S; // game state
+const hardBox = document.getElementById("hard");
+hardBox.checked = store.get("2kdle-hard", false);
 
 function newState(mode) {
   if (mode === "daily") {
     const k = todayKey(), saved = store.get("2kdle-daily", null);
     const pl = pool(80), target = pl[hash("2kdle:" + k) % pl.length].i;
-    if (saved && saved.date === k && saved.target === target) return { mode, date: k, target, guesses: saved.guesses, forfeit: !!saved.forfeit };
-    return { mode, date: k, target, guesses: [] };
+    if (saved && saved.date === k && saved.target === target) {
+      const hard = saved.guesses.length ? !!saved.hard : hardBox.checked;
+      return { mode, date: k, target, guesses: saved.guesses, forfeit: !!saved.forfeit, hard, max: hard ? LIMIT.hard : LIMIT.normal };
+    }
+    return { mode, date: k, target, guesses: [], hard: hardBox.checked, max: hardBox.checked ? LIMIT.hard : LIMIT.normal };
   }
   const pl = pool(+document.getElementById("diff").value);
-  return { mode, target: pl[Math.floor(Math.random() * pl.length)].i, guesses: [] };
+  return { mode, target: pl[Math.floor(Math.random() * pl.length)].i, guesses: [], hard: hardBox.checked, max: hardBox.checked ? LIMIT.hard : LIMIT.normal };
 }
 function status() {
   const won = S.guesses.includes(S.target);
-  return { won, forfeit: !won && !!S.forfeit, over: won || !!S.forfeit || S.guesses.length >= MAX };
+  return { won, forfeit: !won && !!S.forfeit, over: won || !!S.forfeit || S.guesses.length >= S.max };
 }
-function save() { if (S.mode === "daily") store.set("2kdle-daily", { date: S.date, target: S.target, guesses: S.guesses, forfeit: !!S.forfeit }); }
+function save() { if (S.mode === "daily") store.set("2kdle-daily", { date: S.date, target: S.target, guesses: S.guesses, forfeit: !!S.forfeit, hard: S.hard }); }
 
 function compare(g, t) {
   const c = {};
@@ -173,8 +180,8 @@ function showPhoto(t) {
 function shareText() {
   const t = P[S.target], { won, forfeit } = status();
   const sq = st => st === "hit" ? "🟩" : st === "near" ? "🟨" : "⬛";
-  const hm = document.getElementById("hard").checked ? "*" : "";
-  const head = (S.mode === "daily" ? `2Kdle #${dayNumber()} ` : `2Kdle · Unlimited `) + `${won ? S.guesses.length : "X"}/${MAX}${hm}${forfeit ? " (forfeit)" : ""}`;
+  const hm = S.hard ? "*" : "";
+  const head = (S.mode === "daily" ? `2Kdle #${dayNumber()} ` : `2Kdle · Unlimited `) + `${won ? S.guesses.length : "X"}/${S.max}${hm}${forfeit ? " (forfeit)" : ""}`;
   return head + "\n" + S.guesses.map(gi => { const c = compare(P[gi], t); return ["ovr", "pos", "ht", "team", "nation", ...STATS].map(k => sq(c[k].st)).join(""); }).join("\n");
 }
 function recordResult() {
@@ -192,8 +199,8 @@ function renderEnd(justFinished) {
   const st = justFinished ? recordResult() : store.get(S.mode === "daily" ? "2kdle-stats-daily" : "2kdle-stats-free", { played: 0, wins: 0, streak: 0, best: 0 });
   const t = P[S.target];
   end.classList.toggle("lost", !won);
-  const sub = won ? (S.guesses.length === 1 ? "First try. Nothing but net." : `Got it in ${S.guesses.length} of ${MAX} guesses.`)
-    : forfeit ? `You forfeited after ${S.guesses.length} ${S.guesses.length === 1 ? "guess" : "guesses"}.` : `All ${MAX} guesses used.`;
+  const sub = won ? (S.guesses.length === 1 ? "First try. Nothing but net." : `Got it in ${S.guesses.length} of ${S.max} guesses.`)
+    : forfeit ? `You forfeited after ${S.guesses.length} ${S.guesses.length === 1 ? "guess" : "guesses"}.` : `All ${S.max} guesses used.`;
   end.innerHTML = `<figure class="photo" id="endphoto" hidden></figure><div class="endtext"><h2 class="${won ? "win" : "loss"}">${won ? "Victory!" : "Defeat"}</h2><p class="sub">${sub}</p>
     <p>The player was <b>${esc(t.name)}</b>, ${t.ovr} OVR ${t.pos}, ${esc(TEAMS[t.team])} (${esc(t.nation)}).</p>
     <div class="stats"><span><b>${st.played}</b>Played</span><span><b>${st.played ? Math.round(st.wins / st.played * 100) : 0}%</b>Won</span><span><b>${st.streak}</b>Streak</span><span><b>${st.best}</b>Best</span></div>
@@ -213,10 +220,15 @@ function renderCount() {
   const { over } = status(), q = document.getElementById("q");
   document.getElementById("ff").hidden = over;
   document.getElementById("ff-ask").hidden = false; document.getElementById("ff-confirm").hidden = true;
-  document.getElementById("count").innerHTML = over ? `<b>${S.guesses.length}</b>/${MAX} used` : `Guess <b>${S.guesses.length + 1}</b>/${MAX}`;
+  document.getElementById("count").innerHTML = over ? `<b>${S.guesses.length}</b>/${S.max} used` : `Guess <b>${S.guesses.length + 1}</b>/${S.max}`;
   q.disabled = over; q.placeholder = over ? (S.mode === "daily" ? "Come back tomorrow for a new player" : "Hit New player to play again") : "Type a player… e.g. Stephen Curry";
 }
-function render(fresh, justFinished) { renderCard(); renderRows(fresh); renderCount(); renderEnd(justFinished); }
+function renderHard() {
+  const locked = S.guesses.length > 0 && !status().over;
+  hardBox.checked = S.hard; hardBox.disabled = locked;
+  document.getElementById("hardlabel").title = locked ? "Hard mode can't be changed mid-game" : "Hard mode: 5 guesses, and search shows names only";
+}
+function render(fresh, justFinished) { renderCard(); renderRows(fresh); renderCount(); renderEnd(justFinished); renderHard(); }
 
 function guess(i) {
   if (status().over || S.guesses.includes(i)) return;
@@ -276,7 +288,10 @@ document.getElementById("m-daily").onclick = () => setMode("daily");
 document.getElementById("m-free").onclick = () => setMode("free");
 document.getElementById("newgame").onclick = () => start("free");
 document.getElementById("diff").onchange = () => start("free");
-const hardBox = document.getElementById("hard");
-hardBox.checked = store.get("2kdle-hard", false);
-hardBox.onchange = () => { store.set("2kdle-hard", hardBox.checked); if (!sug.hidden) drawList(); q.focus(); };
+hardBox.onchange = () => {
+  store.set("2kdle-hard", hardBox.checked);
+  // Before the first guess, or once a game is over, the switch applies to the current game.
+  if (!S.guesses.length) { S.hard = hardBox.checked; S.max = S.hard ? LIMIT.hard : LIMIT.normal; save(); render(null, false); }
+  if (!sug.hidden) drawList(); q.focus();
+};
 setMode("daily");
