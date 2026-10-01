@@ -1,0 +1,18 @@
+Kawhi Leonard|/kawhi-leonard|93|SF / SG|6'7"|United States
+Scottie Barnes|/scottie-barnes|88|PF / PG|6'8"|United States
+R.J. Barrett|/rj-barrett|82|SG / SF|6'6"|Canada
+Immanuel Quickley|/immanuel-quickley|82|PG / SG|6'2"|United States
+Collin Murray-Boyles|/collin-murray-boyles|80|C / PF|6'7"|United States
+Jakob Poeltl|/jakob-poeltl|79|C|7'0"|Austria
+Jamal Shead|/jamal-shead|76|PG / SG|6'1"|United States
+Ja'Kobe Walter|/jakobe-walter|76|SG / SF|6'4"|United States
+Jamison Battle|/jamison-battle|74|SF / PF|6'7"|United States
+Kyle Anderson|/kyle-anderson|73|PF / C|6'8"|United States
+Trey Jemison III|/trey-jemison|71|C|6'10"|United States
+Trayce Jackson-Davis|/trayce-jackson-davis|71|C / PF|6'9"|United States
+Andre Jackson Jr.|/andre-jackson-jr|71|SF / SG|6'6"|United States
+Allen Graves|/allen-graves|71|PF / C|6'9"|United States
+Alijah Martin|/alijah-martin|70|SG / PG|6'2"|United States
+Malachi Smith|/malachi-smith|70|PG / SG|6'4"|United States
+Jaden Bradley|/jaden-bradley|69|PG / SG|6'3"|United States
+Chucky Hepburn|/chucky-hepburn|68|PG|6'0"|United States

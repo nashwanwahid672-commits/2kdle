@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>2Kdle</title>
+<meta name="description" content="A daily Wordle-style game: guess the mystery NBA 2K27 player in five tries.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap&text=%F0%9F%87%A6%F0%9F%87%B7%F0%9F%87%A6%F0%9F%87%B9%F0%9F%87%A6%F0%9F%87%BA%F0%9F%87%A7%F0%9F%87%A6%F0%9F%87%A7%F0%9F%87%AA%F0%9F%87%A7%F0%9F%87%AC%F0%9F%87%A7%F0%9F%87%B7%F0%9F%87%A7%F0%9F%87%B8%F0%9F%87%A8%F0%9F%87%A6%F0%9F%87%A8%F0%9F%87%A9%F0%9F%87%A8%F0%9F%87%AC%F0%9F%87%A8%F0%9F%87%AD%F0%9F%87%A8%F0%9F%87%B2%F0%9F%87%A8%F0%9F%87%B3%F0%9F%87%A8%F0%9F%87%BF%F0%9F%87%A9%F0%9F%87%AA%F0%9F%87%A9%F0%9F%87%B0%F0%9F%87%A9%F0%9F%87%B4%F0%9F%87%AA%F0%9F%87%AA%F0%9F%87%AA%F0%9F%87%AC%F0%9F%87%AA%F0%9F%87%B8%F0%9F%87%AB%F0%9F%87%AE%F0%9F%87%AB%F0%9F%87%B7%F0%9F%87%AC%F0%9F%87%A7%F0%9F%87%AC%F0%9F%87%AA%F0%9F%87%AC%F0%9F%87%B3%F0%9F%87%AC%F0%9F%87%B7%F0%9F%87%AD%F0%9F%87%B7%F0%9F%87%AD%F0%9F%87%B9%F0%9F%87%AD%F0%9F%87%BA%F0%9F%87%AE%F0%9F%87%B1%F0%9F%87%AE%F0%9F%87%B9%F0%9F%87%AF%F0%9F%87%B2%F0%9F%87%AF%F0%9F%87%B5%F0%9F%87%B1%F0%9F%87%A7%F0%9F%87%B1%F0%9F%87%B9%F0%9F%87%B1%F0%9F%87%BB%F0%9F%87%B2%F0%9F%87%AA%F0%9F%87%B2%F0%9F%87%B1%F0%9F%87%B2%F0%9F%87%BD%F0%9F%87%B3%F0%9F%87%AC%F0%9F%87%B3%F0%9F%87%B1%F0%9F%87%B3%F0%9F%87%BF%F0%9F%87%B5%F0%9F%87%A6%F0%9F%87%B5%F0%9F%87%AD%F0%9F%87%B5%F0%9F%87%B1%F0%9F%87%B5%F0%9F%87%B7%F0%9F%87%B5%F0%9F%87%B9%F0%9F%87%B7%F0%9F%87%B4%F0%9F%87%B7%F0%9F%87%B8%F0%9F%87%B7%F0%9F%87%BA%F0%9F%87%B8%F0%9F%87%AA%F0%9F%87%B8%F0%9F%87%AE%F0%9F%87%B8%F0%9F%87%B3%F0%9F%87%B8%F0%9F%87%B8%F0%9F%87%B9%F0%9F%87%B7%F0%9F%87%BA%F0%9F%87%A6%F0%9F%87%BA%F0%9F%87%AC%F0%9F%87%BA%F0%9F%87%B8%F0%9F%87%BB%F0%9F%87%AA">
+<link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>2K<span>dle</span></h1>
+      <p>Guess the mystery NBA 2K27 player in five tries. Current rosters, every player rated 75 or higher.</p>
+    </div>
+    <div class="modes">
+      <div class="seg" role="group" aria-label="Game mode">
+        <button id="m-daily" aria-pressed="true">Daily</button>
+        <button id="m-free" aria-pressed="false">Unlimited</button>
+      </div>
+      <select id="diff" aria-label="Mystery player pool" hidden>
+        <option value="85">Stars · 85+</option>
+        <option value="80" selected>Starters · 80+</option>
+        <option value="75">Deep bench · 75+</option>
+      </select>
+      <button class="btn" id="newgame" hidden>New player</button>
+      <label class="hard"><input type="checkbox" id="hard"> Hard mode</label>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="side">
+      <div class="card" id="card" aria-label="What you know about the mystery player"></div>
+      <p class="note">The card fills in as you go: any attribute you guess exactly is revealed here.</p>
+    </aside>
+
+    <section class="main">
+      <div class="guessbar">
+        <div class="field">
+          <label for="q" class="sr" hidden>Guess a player</label>
+          <input id="q" type="text" autocomplete="off" spellcheck="false" placeholder="Type a player… e.g. Stephen Curry" role="combobox" aria-expanded="false" aria-controls="sug" aria-autocomplete="list">
+          <ul class="list" id="sug" role="listbox" hidden></ul>
+        </div>
+        <div class="count" id="count">Guess <b>1</b>/5</div>
+        <div class="ff" id="ff">
+          <button class="btn" id="ff-ask">Forfeit</button>
+          <span class="ff-confirm" id="ff-confirm" hidden>Reveal the answer and end this game?
+            <button class="btn danger" id="ff-yes">Yes, forfeit</button><button class="btn" id="ff-no">Keep playing</button></span>
+        </div>
+      </div>
+
+      <div class="end" id="end" hidden></div>
+
+      <div class="board-wrap">
+        <table class="board" aria-label="Your guesses">
+          <thead><tr>
+            <th>Player</th><th>OVR</th><th>POS</th><th>HT</th><th>Team</th><th>Nation</th>
+            <th title="Outside Scoring">OUT</th><th title="Inside Scoring">INS</th><th title="Athleticism">ATH</th><th title="Playmaking">PLY</th><th title="Defense">DEF</th><th title="Rebounding">REB</th>
+          </tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+
+      <div class="legend">
+        <span><i style="background:var(--hit)"></i>Exact match</span>
+        <span><i style="background:var(--near)"></i>Close: a rating within 3, height within 2 inches, same position group (guard / forward / center), team in the same conference, or nation on the same continent</span>
+        <span><i style="background:var(--miss)"></i>Wrong</span>
+        <span>▲ the mystery player is higher · ▼ lower</span>
+        <span>OUT Outside Scoring · INS Inside Scoring · ATH Athleticism · PLY Playmaking · DEF Defense · REB Rebounding</span>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    Ratings are NBA 2K27 ratings as listed on <a href="https://www.2kratings.com" target="_blank" rel="noopener">2KRatings</a>, snapshot taken 1 Oct 2026. They are not an official 2K data release, and in-season rating updates and trades don't change the game. Answer photos come from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener">Wikimedia Commons</a> and are credited under each photo.<br>
+    2Kdle is a fan-made project and is not affiliated with or endorsed by 2K, Take-Two Interactive, the NBA or its teams. NBA 2K is a trademark of Take-Two Interactive Software, Inc.
+  </footer>
+</div>
+
+<script src="data/players.js?v=1"></script>
+<script src="js/game.js?v=1"></script>
+</body>
+</html>

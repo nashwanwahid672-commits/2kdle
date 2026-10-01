@@ -1,0 +1,17 @@
+Anthony Edwards|/anthony-edwards|95|SG / SF|6'4"|United States
+LaMelo Ball|/lamelo-ball|86|PG / SG|6'7"|United States
+Jaden McDaniels|/jaden-mcdaniels|85|SF / PF|6'9"|United States
+Rudy Gobert|/rudy-gobert|84|C|7'1"|France
+Ayo Dosunmu|/ayo-dosunmu|81|SG / PG|6'4"|United States
+Donte DiVincenzo|/donte-divincenzo|78|PG / SG|6'4"|United States
+Terrence Shannon Jr.|/terrence-shannon|75|SF / PF|6'6"|United States
+Trey Lyles|/trey-lyles|74|PF / C|6'9"|Canada
+Bones Hyland|/bones-hyland|74|PG / SG|6'2"|United States
+Cody Williams|/cody-williams|73|PF / SF|6'8"|United States
+Jonathan Kuminga|/jonathan-kuminga|73|PF / SF|6'7"|DR Congo
+Jaylen Clark|/jaylen-clark|72|SG / SF|6'4"|United States
+Joan Beringer|/joan-beringer|72|C|6'11"|France
+Isaiah Evans|/isaiah-evans|70|SG / SF|6'6"|United States
+Enrique Freeman|/enrique-freeman|69|PF / C|6'9"|United States
+Zyon Pullin|/zyon-pullin|68|PG / SG|6'4"|United States
+Rocco Zikarsky|/rocco-zikarsky|68|C|7'3"|Australia

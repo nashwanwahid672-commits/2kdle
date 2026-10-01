@@ -1,0 +1,18 @@
+Nikola Jokic|/nikola-jokic|97|C|6'11"|Serbia
+Jamal Murray|/jamal-murray|89|PG / SG|6'4"|Canada
+Aaron Gordon|/aaron-gordon|83|PF / C|6'8"|United States
+DeMar DeRozan|/demar-derozan|83|SF / SG|6'6"|United States
+Cameron Johnson|/cameron-johnson|80|SF / SG|6'8"|United States
+Christian Braun|/christian-braun|79|SG / SF|6'6"|United States
+Marvin Bagley III|/marvin-bagley-iii|76|C / PF|6'11"|United States
+Julian Strawther|/julian-strawther|75|SF / SG|6'6"|Puerto Rico / United States
+Tyus Jones|/tyus-jones|73|PG|6'1"|United States
+Cam Whitmore|/cameron-whitmore|73|SF / PF|6'6"|United States
+Lonnie Walker IV|/lonnie-walker-iv|72|SG / SF|6'4"|United States
+Spencer Jones|/spencer-jones|72|PF / SF|6'7"|United States
+Ryan Nembhard|/ryan-nembhard|72|PG|5'11"|Canada
+Zeke Nnaji|/zeke-nnaji|71|C / PF|6'9"|United States
+DaRon Holmes II|/daron-holmes|71|C / PF|6'10"|United States
+Alpha Diallo|/alpha-diallo|71|SF / SG|6'7"|Guinea / United States
+Trevon Brazile|/trevon-brazile|69|PF / C|6'10"|United States
+Bryce Hopkins|/bryce-hopkins|68|PF / SF|6'7"|United States
