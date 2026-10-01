@@ -9,7 +9,7 @@ Every guess is compared against the mystery player:
 | OVR, Outside Scoring, Inside Scoring, Athleticism, Playmaking, Defense, Rebounding | Exact | Within ±3 | Off by more than 3 |
 | Height | Exact | Within ±2 inches | Off by more than 2 inches |
 | Position (PG / SG / SF / PF / C) | Exact | Same group (guards PG/SG, forwards SF/PF, center C) | Different group |
-| Team | Exact | Same conference | Other conference |
+| Team | Exact | Same division (Atlantic, Central, Southeast, Northwest, Pacific, Southwest) | Other division |
 | Nation | Exact | Same continent | Different continent |
 
 Numbers and height that aren't exact show ▲ or ▼ to say whether the mystery player is higher or lower. The card on the left reveals each attribute once you guess it exactly.

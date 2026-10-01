@@ -1,6 +1,6 @@
 // Player data (RAW) is loaded from data/players.js
-// [name, ovr, pos, team, conference, nation, continent, height (in), outside, inside, athleticism, playmaking, defense, rebounding]
-const P = RAW.map((r, i) => ({ i, name: r[0], ovr: r[1], pos: r[2], team: r[3], conf: r[4], nation: r[5], cont: r[6], ht: r[7],
+// [name, ovr, pos, team, division, nation, continent, height (in), outside, inside, athleticism, playmaking, defense, rebounding]
+const P = RAW.map((r, i) => ({ i, name: r[0], ovr: r[1], pos: r[2], team: r[3], div: r[4], nation: r[5], cont: r[6], ht: r[7],
   os: r[8], ins: r[9], ath: r[10], ply: r[11], def: r[12], reb: r[13] }));
 // Guess limit: 8 normally, 5 in Hard mode. It's fixed when a game starts, and
 // Hard mode can't be switched while a game is in progress.
@@ -72,7 +72,7 @@ function compare(g, t) {
   }
   c.pos = { v: g.pos, st: g.pos === t.pos ? "hit" : GROUP[g.pos] === GROUP[t.pos] ? "near" : "miss" };
   c.nation = { v: g.nation, st: g.nation === t.nation ? "hit" : g.cont === t.cont ? "near" : "miss" };
-  c.team = { v: g.team, title: TEAMS[g.team], st: g.team === t.team ? "hit" : g.conf === t.conf ? "near" : "miss" };
+  c.team = { v: g.team, title: TEAMS[g.team], st: g.team === t.team ? "hit" : g.div === t.div ? "near" : "miss" };
   return c;
 }
 
@@ -80,20 +80,20 @@ function compare(g, t) {
 function knowledge() {
   const t = P[S.target], K = {};
   for (const k of NUM) K[k] = null;
-  const facts = { pos: null, nation: null, team: null, conf: null };
+  const facts = { pos: null, nation: null, team: null, div: null };
   for (const gi of S.guesses) {
     const g = P[gi], c = compare(g, t);
     for (const k of NUM) if (c[k].st === "hit") K[k] = g[k];
     if (c.pos.st === "hit") facts.pos = g.pos;
     if (c.nation.st === "hit") facts.nation = g.nation;
-    if (c.team.st === "hit") { facts.team = g.team; facts.conf = g.conf; }
+    if (c.team.st === "hit") { facts.team = g.team; facts.div = g.div; }
   }
   return { K, facts };
 }
 
 function renderCard() {
   const { over } = status(), t = P[S.target], el = document.getElementById("card");
-  const { K, facts } = over ? { K: Object.fromEntries(NUM.map(k => [k, t[k]])), facts: { pos: t.pos, nation: t.nation, team: t.team, conf: t.conf } } : knowledge();
+  const { K, facts } = over ? { K: Object.fromEntries(NUM.map(k => [k, t[k]])), facts: { pos: t.pos, nation: t.nation, team: t.team, div: t.div } } : knowledge();
   const val = k => K[k] == null ? "?" : show(k, K[k]);
   const kn = k => K[k] == null ? "" : " known";
   const ovr = `<div class="c-ovr${kn("ovr")}">${val("ovr")}</div>`;
@@ -101,7 +101,7 @@ function renderCard() {
   const name = over ? esc(t.name) : "? ? ?";
   const stats = STATS.map(k => `<div class="c-stat${kn(k)}"><span>${LABEL[k]}</span><b>${val(k)}</b></div>`).join("");
   const meta = `<span class="${facts.nation ? "known" : ""}">${facts.nation ? `<i class="f" aria-hidden="true">${FLAG[facts.nation] || ""}</i>` : ""}${esc(facts.nation || "Nation ?")}</span>`
-    + `<span class="${facts.conf ? "known" : ""}">${esc(facts.conf ? facts.conf + "ern Conf." : "Conference ?")}</span>`
+    + `<span class="${facts.div ? "known" : ""}">${esc(facts.div ? facts.div + " Div." : "Division ?")}</span>`
     + `<span class="${facts.team ? "known" : ""}">${esc(facts.team ? TEAMS[facts.team] : "Team ?")}</span>`
     + `<span class="${K.ht == null ? "" : "known"}">Height ${esc(val("ht"))}</span>`;
   el.innerHTML = `<div class="c-top"><div>${ovr}${pos}</div>${facts.team ? `<div class="c-team">${esc(facts.team)}</div>` : ""}</div><div class="c-face" aria-hidden="true">${over ? "" : "?"}</div>
@@ -115,7 +115,7 @@ function cell(c, cls = "") {
 }
 function renderRows(freshIndex) {
   const t = P[S.target], tb = document.getElementById("rows");
-  if (!S.guesses.length) { tb.innerHTML = `<tr class="empty"><td colspan="12">No guesses yet. Start with a big name to narrow down the conference and position, then use the arrows to close in on the ratings.</td></tr>`; return; }
+  if (!S.guesses.length) { tb.innerHTML = `<tr class="empty"><td colspan="12">No guesses yet. Start with a big name to narrow down the division and position, then use the arrows to close in on the ratings.</td></tr>`; return; }
   tb.innerHTML = S.guesses.map((gi, n) => {
     const g = P[gi], c = compare(g, t);
     return `<tr class="${n === freshIndex ? "fresh" : ""}"><td class="name">${esc(g.name)}<small>${g.ovr} ${g.pos} · ${g.team}</small></td>
