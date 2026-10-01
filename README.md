@@ -50,7 +50,7 @@ data/players.js                Player data (generated)
 scripts/build_data.py          Builds data/players.js from scripts/source/players.csv
 scripts/import_2kratings.py    Builds scripts/source/players.csv from the 2KRatings snapshot
 scripts/source/players.csv     One row per player, with the source and source URL of each row
-scripts/source/2kratings/      The raw 2KRatings snapshot (team rosters, player pages, birthdate fixes)
+scripts/source/2kratings/      The raw 2KRatings snapshot (team rosters and player pages)
 ```
 
 ## Rebuilding the data
@@ -72,7 +72,6 @@ There's no official NBA 2K27 ratings file yet, so the data comes from 2KRatings.
 | `pos` | C | PG, SG, SF, PF or C |
 | `height_in` | 83 | Total inches |
 | `nation` | Serbia | Must be in `CONTINENT` in `build_data.py` |
-| `birthdate` | 1995-02-19 | Optional. Only used to match the answer photo, never shown |
 | `outside_scoring` … `rebounding` | 91 | The six 2K category ratings |
 | `source`, `source_url` | | Where the row came from |
 
@@ -80,14 +79,13 @@ The build script stops with a clear message if it meets a team, position or coun
 
 ## Data notes
 
-- 2KRatings' own "age" field is out of date, and a number of birth years read from its pages were garbled; the corrections are in `scripts/source/2kratings/overrides.txt`. Age isn't a clue in the game, so this only affects photo matching.
 - 14 players show a different OVR on their team page and their player page; the player-page value is used, since the category ratings come from there too.
 - Continents for countries between two continents follow their FIBA zone (Turkey, Georgia and Israel count as Europe).
 
 ## Credits
 
 - Player ratings: [2KRatings](https://www.2kratings.com), snapshot of 1 October 2026. Not an official 2K data release.
-- Answer photos: freely licensed images from [Wikimedia Commons](https://commons.wikimedia.org), found through Wikidata at the end of each game and credited under the photo
+- Answer photos: freely licensed images from [Wikimedia Commons](https://commons.wikimedia.org), found through Wikidata (best-ranked basketball player with that name) at the end of each game and credited under the photo
 - Built on the engine of [FCdle](https://github.com/nashwanwahid672-commits/fcdle)
 
 2Kdle is a fan-made project and is not affiliated with or endorsed by 2K, Take-Two Interactive, the NBA or its teams. NBA 2K is a trademark of Take-Two Interactive Software, Inc.

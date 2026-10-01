@@ -1,7 +1,7 @@
 // Player data (RAW) is loaded from data/players.js
-// [name, ovr, pos, team, conference, nation, continent, height (in), outside, inside, athleticism, playmaking, defense, rebounding, birth year]
+// [name, ovr, pos, team, conference, nation, continent, height (in), outside, inside, athleticism, playmaking, defense, rebounding]
 const P = RAW.map((r, i) => ({ i, name: r[0], ovr: r[1], pos: r[2], team: r[3], conf: r[4], nation: r[5], cont: r[6], ht: r[7],
-  os: r[8], ins: r[9], ath: r[10], ply: r[11], def: r[12], reb: r[13], by: r[14] || 0 }));
+  os: r[8], ins: r[9], ath: r[10], ply: r[11], def: r[12], reb: r[13] }));
 const MAX = 5;
 const NUM = ["ovr", "ht", "os", "ins", "ath", "ply", "def", "reb"];
 const NEAR = { ovr: 3, ht: 2, os: 3, ins: 3, ath: 3, ply: 3, def: 3, reb: 3 };
@@ -119,12 +119,11 @@ function renderRows(freshIndex) {
 }
 
 // Answer photo from Wikimedia Commons (freely licensed), looked up through Wikidata.
-// Only used on the end-of-game panel. Matches a basketball player (Q3665646) born
-// within a year of the player's birth year. Fails silently: no match, no photo.
+// Only used on the end-of-game panel. Takes the best-ranked search result whose
+// occupation is basketball player (Q3665646) and that has a photo. Fails silently: no match, no photo.
 const PHOTO_CACHE = new Map();
 const WD = "https://www.wikidata.org/w/api.php?format=json&origin=*&";
 async function getJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(r.status); return r.json(); }
-function birthYear(time) { const m = /^[+]?(\d{4})-/.exec(time || ""); return m ? +m[1] : null; }
 async function findPhoto(p) {
   if (PHOTO_CACHE.has(p.i)) return PHOTO_CACHE.get(p.i);
   const job = (async () => {
@@ -138,8 +137,7 @@ async function findPhoto(p) {
         const c = (e.entities[id] || {}).claims || {};
         const isHooper = (c.P106 || []).some(x => x.mainsnak?.datavalue?.value?.id === "Q3665646");
         const file = c.P18?.[0]?.mainsnak?.datavalue?.value;
-        const by = birthYear(c.P569?.[0]?.mainsnak?.datavalue?.value?.time);
-        if (!isHooper || !file || by == null || (p.by && Math.abs(by - p.by) > 1)) continue;
+        if (!isHooper || !file) continue;
         const info = await getJSON("https://commons.wikimedia.org/w/api.php?format=json&origin=*&action=query&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=600&titles=" + encodeURIComponent("File:" + file));
         const ii = Object.values(info.query.pages)[0]?.imageinfo?.[0]; if (!ii?.thumburl) continue;
         const strip = h => { const d = document.createElement("div"); d.innerHTML = h || ""; return d.textContent.trim().replace(/\s+/g, " "); };

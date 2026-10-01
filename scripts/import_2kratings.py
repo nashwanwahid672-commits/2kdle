@@ -9,11 +9,7 @@ Inputs (scripts/source/2kratings/):
   rosters/<TEAM>.txt  One file per team, copied from www.2kratings.com/teams/<team>.
                       Line format: name|/player-page|OVR|positions|height|nationality
   details.txt         One line per player in the pool, from that player's page.
-                      Line format: /player-page|OS|IS|ATH|PLY|DEF|REB|birthdate|OVR|team
-  overrides.txt       Birthdates corrected by hand where the gathered value was
-                      clearly wrong (wrong century etc). Birth year is only used to
-                      match the Wikidata photo, never shown in the game.
-                      Line format: /player-page|YYYY-MM-DD|note
+                      Line format: /player-page|OS|IS|ATH|PLY|DEF|REB|OVR|team
 
 Pool: every current-roster player rated 75+ on his team page (277 players).
 
@@ -32,7 +28,7 @@ MIN_OVR = 75
 SNAPSHOT = "2026-10-01"
 SOURCE = "2KRatings (2kratings.com), gathered " + SNAPSHOT
 
-COLUMNS = ["name", "team", "ovr", "pos", "height_in", "nation", "birthdate",
+COLUMNS = ["name", "team", "ovr", "pos", "height_in", "nation",
            "outside_scoring", "inside_scoring", "athleticism", "playmaking",
            "defense", "rebounding", "source", "source_url"]
 
@@ -68,17 +64,11 @@ def main():
                                 pos=pos.split("/")[0].strip(), height=height_in(h),
                                 nation=NATION_FIX.get(nat.split("/")[0].strip(), nat.split("/")[0].strip()))
 
-    overrides = {}
-    for line in (SRC / "overrides.txt").read_text(encoding="utf-8").splitlines():
-        if line.strip() and not line.startswith("#"):
-            path, date, *_ = line.split("|")
-            overrides[path] = date
-
     rows, mismatched, seen = [], [], set()
     for line in (SRC / "details.txt").read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
-        path, os_, is_, ath, ply, dfn, reb, born, ovr, _team = line.split("|")
+        path, os_, is_, ath, ply, dfn, reb, ovr, _team = line.split("|")
         r = roster[path]
         seen.add(path)
         if r["team_ovr"] < MIN_OVR:
@@ -90,7 +80,6 @@ def main():
         rows.append({
             "name": DISPLAY_NAMES.get(path, r["name"]), "team": r["team"], "ovr": int(ovr),
             "pos": r["pos"], "height_in": r["height"], "nation": r["nation"],
-            "birthdate": overrides.get(path, born),
             "outside_scoring": os_, "inside_scoring": is_, "athleticism": ath,
             "playmaking": ply, "defense": dfn, "rebounding": reb,
             "source": SOURCE, "source_url": "https://www.2kratings.com" + path,
